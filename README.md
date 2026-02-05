@@ -23,6 +23,11 @@ All portfolio data comes from `assets/data/portfolio.json`.
    - `"cvUrl": "assets/files/cv.pdf"`
 3. Hot restart / rerun the app
 
+### Add your photo
+1. Put your image inside `assets/images/` (example: `assets/images/my.jpg`)
+2. Update `assets/data/portfolio.json`:
+   - `"avatarAsset": "assets/images/my.jpg"`
+
 ## Deploy (web)
 - `flutter build web --release`
 - Upload `build/web/` to your hosting provider

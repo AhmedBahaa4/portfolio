@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 class AppText {
-  static TextTheme textTheme() {
-    const baseColor = AppColors.textPrimary;
-    const secondaryColor = AppColors.textSecondary;
-
-    return const TextTheme(
+  static TextTheme textTheme({
+    Color baseColor = AppColors.textPrimary,
+    Color secondaryColor = AppColors.textSecondary,
+  }) {
+    return TextTheme(
       displayLarge: TextStyle(
         fontSize: 48,
         fontWeight: FontWeight.w800,

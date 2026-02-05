@@ -38,16 +38,22 @@ class _HoverSurfaceState extends State<HoverSurface> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    final backgroundColor =
-        (theme.cardTheme.color ?? scheme.surface).withAlpha((0.92 * 255).round());
+    final backgroundAlpha = isDark ? 0.92 : 0.96;
+    final backgroundColor = (theme.cardTheme.color ?? scheme.surface)
+        .withAlpha((backgroundAlpha * 255).round());
     final borderColor = _hovered
         ? scheme.primary.withAlpha((0.35 * 255).round())
         : theme.dividerColor.withAlpha((0.95 * 255).round());
 
+    final shadowAlpha = isDark
+        ? (_hovered ? 0.36 : 0.22)
+        : (_hovered ? 0.16 : 0.10);
+
     final shadow = BoxShadow(
       color: Colors.black
-          .withAlpha(((_hovered ? 0.36 : 0.22) * 255).round()),
+          .withAlpha(((shadowAlpha) * 255).round()),
       blurRadius: _hovered ? 26 : 16,
       spreadRadius: -2,
       offset: Offset(0, _hovered ? 14 : 10),

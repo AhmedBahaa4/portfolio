@@ -3,7 +3,8 @@
   "headline": "Flutter Developer • Firebase • BLoC/Cubit • REST APIs",
   "location": "Minya Al Qamh, Al Sharqia, Egypt",
   "summary": "Flutter Developer with 1 year of hands-on experience building mobile apps with Flutter/Dart using Provider and BLoC/Cubit. Experienced with Firebase (Auth, Firestore, Storage, FCM) and integrating REST APIs. Familiar with Node.js/Express and MongoDB through project work (bookmark sync API). Strong CS foundation (Data Structures, Algorithms, OOP) and Agile workflows.",
-  "cvUrl": "",
+  "avatarAsset": "assets/images/my.jpg",
+  "cvUrl": "assets/files/Ahmed Bahaa Abdel Aziz Abdel Aal.pdf",
   "skills": [
     "Flutter",
     "Dart",

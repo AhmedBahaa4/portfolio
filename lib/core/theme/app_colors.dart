@@ -13,4 +13,13 @@ class AppColors {
 
   static const Color border = Color(0xFF243042);
   static const Color shadow = Color(0x66000000);
+
+  static const Color backgroundLight = Color(0xFFF6F7FB);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color surface2Light = Color(0xFFF1F5F9);
+
+  static const Color textPrimaryLight = Color(0xFF0F172A);
+  static const Color textSecondaryLight = Color(0xFF475569);
+
+  static const Color borderLight = Color(0xFFE2E8F0);
 }

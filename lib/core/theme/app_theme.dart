@@ -4,6 +4,93 @@ import 'app_colors.dart';
 import 'app_text.dart';
 
 class AppTheme {
+  static ThemeData light() {
+    final colorScheme = const ColorScheme.light(
+      primary: AppColors.primary,
+      secondary: AppColors.secondary,
+      surface: AppColors.surfaceLight,
+      onSurface: AppColors.textPrimaryLight,
+      onPrimary: Colors.white,
+      onSecondary: Colors.black,
+    ).copyWith(
+      surfaceContainerHighest: AppColors.surface2Light,
+    );
+
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: AppColors.backgroundLight,
+      textTheme: AppText.textTheme(
+        baseColor: AppColors.textPrimaryLight,
+        secondaryColor: AppColors.textSecondaryLight,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
+      cardTheme: CardThemeData(
+        color: AppColors.surfaceLight,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.borderLight),
+        ),
+      ),
+      dividerTheme: const DividerThemeData(color: AppColors.borderLight),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: AppColors.surfaceLight,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.borderLight),
+        ),
+        textStyle: const TextStyle(color: AppColors.textPrimaryLight),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.textPrimaryLight,
+          textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          minimumSize: const Size(44, 44),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.textPrimaryLight,
+          minimumSize: const Size(44, 44),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          side: const BorderSide(color: AppColors.borderLight),
+          textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.surface2Light,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.borderLight),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.borderLight),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
+      ),
+    );
+  }
+
   static ThemeData dark() {
     final colorScheme = const ColorScheme.dark(
       primary: AppColors.primary,

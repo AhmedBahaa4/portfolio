@@ -32,9 +32,10 @@ class HeroHeader extends StatelessWidget {
         (isDesktop ? theme.textTheme.displayLarge : theme.textTheme.displayMedium)
             ?.copyWith(height: 1.0);
 
-    return FadeSlideIn(
-      beginOffset: const Offset(0, 0.04),
-      child: Column(
+    final avatarAsset = portfolio.avatarAsset;
+
+    Widget buildTextColumn({required bool includeInlineAvatar}) {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (portfolio.skills.isNotEmpty) ...[
@@ -47,6 +48,16 @@ class HeroHeader extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
+          ],
+          if (includeInlineAvatar && avatarAsset != null) ...[
+            Align(
+              alignment: Alignment.center,
+              child: _HeroAvatar(
+                asset: avatarAsset,
+                size: Responsive.isMobile(context) ? 150 : 190,
+              ),
+            ),
+            const SizedBox(height: 18),
           ],
           _GradientText(
             portfolio.name,
@@ -90,7 +101,17 @@ class HeroHeader extends StatelessWidget {
                   label: 'Download CV',
                   icon: Icons.description_outlined,
                   outlined: true,
-                  onPressed: () => DownloadUtils.file(cvUrl),
+                  onPressed: () async {
+                    final ok = await DownloadUtils.file(cvUrl);
+                    if (!context.mounted || ok) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'CV file not found. Check assets/files and cvUrl in portfolio.json.',
+                        ),
+                      ),
+                    );
+                  },
                 ),
               PrimaryButton(
                 label: 'Contact',
@@ -106,7 +127,21 @@ class HeroHeader extends StatelessWidget {
             ],
           ),
         ],
-      ),
+      );
+    }
+
+    return FadeSlideIn(
+      beginOffset: const Offset(0, 0.04),
+      child: (isDesktop && avatarAsset != null)
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: buildTextColumn(includeInlineAvatar: false)),
+                const SizedBox(width: 26),
+                _HeroAvatar(asset: avatarAsset, size: 260),
+              ],
+            )
+          : buildTextColumn(includeInlineAvatar: true),
     );
   }
 }
@@ -233,6 +268,124 @@ class _IconLink extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HeroAvatar extends StatefulWidget {
+  final String asset;
+  final double size;
+
+  const _HeroAvatar({
+    required this.asset,
+    required this.size,
+  });
+
+  @override
+  State<_HeroAvatar> createState() => _HeroAvatarState();
+}
+
+class _HeroAvatarState extends State<_HeroAvatar> {
+  bool _hovered = false;
+
+  void _setHovered(bool value) {
+    if (_hovered == value) return;
+    setState(() => _hovered = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final radius = widget.size * 0.20;
+    final innerRadius = widget.size * 0.18;
+
+    final glow = BoxShadow(
+      color: scheme.primary.withAlpha(((_hovered ? 0.30 : 0.20) * 255).round()),
+      blurRadius: _hovered ? 46 : 34,
+      spreadRadius: -10,
+      offset: Offset(0, _hovered ? 18 : 14),
+    );
+
+    final dropShadowAlpha =
+        isDark ? (_hovered ? 0.34 : 0.24) : (_hovered ? 0.18 : 0.12);
+    final drop = BoxShadow(
+      color: Colors.black.withAlpha((dropShadowAlpha * 255).round()),
+      blurRadius: _hovered ? 28 : 18,
+      spreadRadius: -8,
+      offset: Offset(0, _hovered ? 18 : 14),
+    );
+
+    final scale = _hovered ? 1.02 : 1.0;
+    final lift = _hovered ? -4.0 : 0.0;
+    final transform = Matrix4.translationValues(0.0, lift, 0.0)
+      ..multiply(Matrix4.diagonal3Values(scale, scale, 1.0));
+
+    final content = AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      transform: transform,
+      transformAlignment: Alignment.center,
+      width: widget.size,
+      height: widget.size,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            scheme.primary.withAlpha((0.90 * 255).round()),
+            scheme.secondary.withAlpha((0.90 * 255).round()),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(radius),
+        boxShadow: [glow, drop],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(innerRadius),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              widget.asset,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                  ),
+                  child: Icon(
+                    Icons.person_outline,
+                    size: widget.size * 0.42,
+                    color: scheme.onSurface.withAlpha((0.75 * 255).round()),
+                  ),
+                );
+              },
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withAlpha(((isDark ? 0.22 : 0.14) * 255).round()),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.basic,
+      onEnter: (_) => _setHovered(true),
+      onExit: (_) => _setHovered(false),
+      child: content,
     );
   }
 }

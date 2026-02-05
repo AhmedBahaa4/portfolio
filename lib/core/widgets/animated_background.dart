@@ -39,6 +39,7 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -67,7 +68,8 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
                         top: h * (-0.18 + dy1),
                         child: _GlowBlob(
                           diameter: 520,
-                          color: scheme.primary.withAlpha((0.20 * 255).round()),
+                          color: scheme.primary
+                              .withAlpha(((isDark ? 0.20 : 0.12) * 255).round()),
                         ),
                       ),
                       Positioned(
@@ -75,7 +77,8 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
                         top: h * (0.02 + dy2),
                         child: _GlowBlob(
                           diameter: 460,
-                          color: scheme.secondary.withAlpha((0.16 * 255).round()),
+                          color: scheme.secondary
+                              .withAlpha(((isDark ? 0.16 : 0.10) * 255).round()),
                         ),
                       ),
                       Positioned(
@@ -83,7 +86,8 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
                         bottom: h * (-0.22 + dy3),
                         child: _GlowBlob(
                           diameter: 620,
-                          color: scheme.primary.withAlpha((0.10 * 255).round()),
+                          color: scheme.primary
+                              .withAlpha(((isDark ? 0.10 : 0.06) * 255).round()),
                         ),
                       ),
                     ],
@@ -134,6 +138,9 @@ class _Vignette extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final strength = isDark ? 0.40 : 0.14;
+
     return IgnorePointer(
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -142,7 +149,7 @@ class _Vignette extends StatelessWidget {
             radius: 1.15,
             colors: [
               Colors.transparent,
-              Colors.black.withAlpha((0.40 * 255).round()),
+              Colors.black.withAlpha((strength * 255).round()),
             ],
             stops: const [0.0, 1.0],
           ),

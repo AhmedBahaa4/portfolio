@@ -6,6 +6,7 @@ class PortfolioModel {
   final String headline;
   final String location;
   final String summary;
+  final String? avatarAsset;
   final String? cvUrl;
   final List<String> skills;
   final List<ExperienceItemModel> experience;
@@ -17,6 +18,7 @@ class PortfolioModel {
     required this.headline,
     required this.location,
     required this.summary,
+    this.avatarAsset,
     this.cvUrl,
     required this.skills,
     required this.experience,
@@ -30,6 +32,7 @@ class PortfolioModel {
       headline: _asString(json['headline']),
       location: _asString(json['location']),
       summary: _asString(json['summary']),
+      avatarAsset: _asNullableString(json['avatarAsset']),
       cvUrl: _asNullableString(json['cvUrl']),
       skills: _asStringList(json['skills']),
       experience: _asMapList(json['experience'])
@@ -48,6 +51,7 @@ class PortfolioModel {
       headline: headline,
       location: location,
       summary: summary,
+      avatarAsset: avatarAsset,
       cvUrl: cvUrl,
       skills: skills,
       experience: experience.map((e) => e.toDomain()).toList(growable: false),
