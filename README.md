@@ -1,16 +1,28 @@
-# portfolio
+# Portfolio
 
-A new Flutter project.
+Professional Flutter portfolio (web) with clean architecture.
 
-## Getting Started
+## Run locally
 
-This project is a starting point for a Flutter application.
+- `flutter pub get`
+- `flutter run -d chrome`
 
-A few resources to get you started if this is your first Flutter project:
+## Update your content
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+All portfolio data comes from `assets/data/portfolio.json`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Add a new project
+1. Open `assets/data/portfolio.json`
+2. Append a new object to the `projects` array (same shape as the existing ones)
+3. (Optional) Add an image to `assets/images/` and set `imageAsset` to something like:
+   - `"imageAsset": "assets/images/my_project.png"`
+
+### Add a CV (PDF download)
+1. Put your PDF inside `assets/files/` (example: `assets/files/cv.pdf`)
+2. Update `assets/data/portfolio.json`:
+   - `"cvUrl": "assets/files/cv.pdf"`
+3. Hot restart / rerun the app
+
+## Deploy (web)
+- `flutter build web --release`
+- Upload `build/web/` to your hosting provider

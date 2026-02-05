@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/widgets/animated_background.dart';
@@ -53,11 +54,35 @@ class _HomePageState extends State<HomePage> {
   void _scrollTo(GlobalKey key) {
     final targetContext = key.currentContext;
     if (targetContext == null) return;
-    Scrollable.ensureVisible(
-      targetContext,
-      duration: const Duration(milliseconds: 550),
+    if (!_scrollController.hasClients) {
+      Scrollable.ensureVisible(
+        targetContext,
+        duration: const Duration(milliseconds: 550),
+        curve: Curves.easeOutCubic,
+        alignment: 0.1,
+      );
+      return;
+    }
+
+    final renderObject = targetContext.findRenderObject();
+    if (renderObject == null) return;
+
+    final viewport = RenderAbstractViewport.maybeOf(renderObject);
+    if (viewport == null) return;
+
+    final revealed = viewport.getOffsetToReveal(renderObject, 0.0);
+    final desiredOffset =
+        revealed.offset - (PortfolioAppBar.height + 12); // keep title visible
+
+    final clamped = desiredOffset.clamp(
+      0.0,
+      _scrollController.position.maxScrollExtent,
+    );
+
+    _scrollController.animateTo(
+      clamped.toDouble(),
+      duration: const Duration(milliseconds: 650),
       curve: Curves.easeOutCubic,
-      alignment: 0.1,
     );
   }
 
@@ -151,7 +176,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final padding = Responsive.pagePadding(context);
     final contentPadding = padding.copyWith(
-      top: padding.top + PortfolioAppBar.height + 18,
+      top: padding.top + PortfolioAppBar.height + 8,
     );
 
     return Scrollbar(

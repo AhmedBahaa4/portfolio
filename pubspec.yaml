@@ -24,3 +24,4 @@ flutter:
   assets:
     - assets/data/portfolio.json
     - assets/images/
+    - assets/files/

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/download.dart';
 import '../../../../core/utils/launch.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/fade_slide_in.dart';
@@ -84,6 +85,13 @@ class HeroHeader extends StatelessWidget {
                 icon: Icons.work_outline,
                 onPressed: onTapProjects,
               ),
+              if (portfolio.cvUrl case final cvUrl?)
+                PrimaryButton(
+                  label: 'Download CV',
+                  icon: Icons.description_outlined,
+                  outlined: true,
+                  onPressed: () => DownloadUtils.file(cvUrl),
+                ),
               PrimaryButton(
                 label: 'Contact',
                 icon: Icons.mail_outline,

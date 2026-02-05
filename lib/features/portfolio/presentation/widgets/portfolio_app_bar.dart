@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/download.dart';
 import '../../../../core/utils/responsive.dart';
 import '../bloc/portfolio_bloc.dart';
 import '../bloc/portfolio_state.dart';
@@ -28,7 +29,7 @@ class PortfolioAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(height);
 
-  void _openMenu(BuildContext context) {
+  void _openMenu(BuildContext context, {String? cvUrl}) {
     final theme = Theme.of(context);
 
     showModalBottomSheet<void>(
@@ -42,6 +43,14 @@ class PortfolioAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (cvUrl != null)
+                ListTile(
+                  title: const Text('Download CV'),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    DownloadUtils.file(cvUrl);
+                  },
+                ),
               ListTile(
                 title: const Text('Projects'),
                 onTap: () {
@@ -81,9 +90,14 @@ class PortfolioAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final title = switch (context.watch<PortfolioBloc>().state) {
+    final state = context.watch<PortfolioBloc>().state;
+    final title = switch (state) {
       PortfolioLoadSuccess(:final portfolio) => portfolio.name,
       _ => 'Portfolio',
+    };
+    final cvUrl = switch (state) {
+      PortfolioLoadSuccess(:final portfolio) => portfolio.cvUrl,
+      _ => null,
     };
 
     final backgroundColor =
@@ -94,39 +108,49 @@ class PortfolioAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Material(
       color: Colors.transparent,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOutCubic,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border(bottom: BorderSide(color: borderColor)),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  _Brand(title: title),
-                  const Spacer(),
-                  if (Responsive.isDesktop(context))
-                    Row(
-                      children: [
-                        _NavButton(label: 'Projects', onTap: onTapProjects),
-                        _NavButton(label: 'Skills', onTap: onTapSkills),
-                        _NavButton(label: 'Experience', onTap: onTapExperience),
-                        _NavButton(label: 'Contact', onTap: onTapContact),
-                      ],
-                    )
-                  else
-                    IconButton(
-                      tooltip: 'Menu',
-                      onPressed: () => _openMenu(context),
-                      icon: const Icon(Icons.menu),
-                    ),
-                ],
+      child: ClipRect(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            border: Border(bottom: BorderSide(color: borderColor)),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    _Brand(title: title),
+                    const Spacer(),
+                    if (Responsive.isDesktop(context))
+                      Row(
+                        children: [
+                          _NavButton(label: 'Projects', onTap: onTapProjects),
+                          _NavButton(label: 'Skills', onTap: onTapSkills),
+                          _NavButton(
+                            label: 'Experience',
+                            onTap: onTapExperience,
+                          ),
+                          _NavButton(label: 'Contact', onTap: onTapContact),
+                          if (cvUrl != null)
+                            _NavButton(
+                              label: 'CV',
+                              onTap: () => DownloadUtils.file(cvUrl),
+                            ),
+                        ],
+                      )
+                    else
+                      IconButton(
+                        tooltip: 'Menu',
+                        onPressed: () => _openMenu(context, cvUrl: cvUrl),
+                        icon: const Icon(Icons.menu),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

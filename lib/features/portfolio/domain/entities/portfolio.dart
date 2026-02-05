@@ -7,6 +7,7 @@ class Portfolio extends Equatable {
   final String headline;
   final String location;
   final String summary;
+  final String? cvUrl;
   final List<String> skills;
   final List<ExperienceItem> experience;
   final List<Project> projects;
@@ -17,6 +18,7 @@ class Portfolio extends Equatable {
     required this.headline,
     required this.location,
     required this.summary,
+    this.cvUrl,
     required this.skills,
     required this.experience,
     required this.projects,
@@ -29,6 +31,7 @@ class Portfolio extends Equatable {
         headline,
         location,
         summary,
+        cvUrl,
         skills,
         experience,
         projects,
