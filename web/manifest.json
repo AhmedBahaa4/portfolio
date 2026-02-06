@@ -6,7 +6,7 @@
     "background_color": "#0B1020",
     "theme_color": "#6C63FF",
     "description": "Ahmed Bahaa - Flutter Developer portfolio.",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

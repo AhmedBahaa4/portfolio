@@ -7,6 +7,11 @@ Professional Flutter portfolio (web) with clean architecture.
 - `flutter pub get`
 - `flutter run -d chrome`
 
+## Test on phone (same Wi‑Fi)
+Run a web server build and open it from your phone:
+- `flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080`
+- On your phone open: `http://<YOUR_PC_LAN_IP>:8080`
+
 ## Update your content
 
 All portfolio data comes from `assets/data/portfolio.json`.

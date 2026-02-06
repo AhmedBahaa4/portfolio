@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/launch.dart';
+import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/fade_slide_in.dart';
 import '../../../../core/widgets/hover_scale.dart';
 import '../../../../core/widgets/hover_surface.dart';
@@ -18,6 +19,11 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+    final columns = isDesktop || Responsive.isTablet(context) ? 2 : 1;
+    final crossSpacing = isDesktop ? 16.0 : 12.0;
+    final mainSpacing = isDesktop ? 16.0 : 12.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,13 +44,41 @@ class ProjectsSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           )
-        else
+        else if (columns == 1)
           for (final (index, project) in projects.indexed)
             FadeSlideIn(
               delay: Duration(milliseconds: 140 + (index * 90)),
               beginOffset: const Offset(0, 0.03),
               child: _ProjectCard(project: project),
-            ),
+            )
+        else
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final itemWidth =
+                  (constraints.maxWidth - ((columns - 1) * crossSpacing)) / columns;
+              final mainAxisExtent = itemWidth * 0.62;
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: crossSpacing,
+                  mainAxisSpacing: mainSpacing,
+                  mainAxisExtent: mainAxisExtent,
+                ),
+                itemCount: projects.length,
+                itemBuilder: (context, index) {
+                  final project = projects[index];
+                  return FadeSlideIn(
+                    delay: Duration(milliseconds: 140 + (index * 90)),
+                    beginOffset: const Offset(0, 0.03),
+                    child: _ProjectCard(project: project),
+                  );
+                },
+              );
+            },
+          ),
       ],
     );
   }
@@ -59,9 +93,7 @@ class _ProjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: HoverSurface(
+    return HoverSurface(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -117,7 +149,6 @@ class _ProjectCard extends StatelessWidget {
             ],
           ],
         ),
-      ),
     );
   }
 }
